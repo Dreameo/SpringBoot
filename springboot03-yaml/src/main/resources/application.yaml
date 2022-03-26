@@ -1,0 +1,27 @@
+
+person:
+  userName: zhangsan
+  boss: true
+  birth: 2020/09/08
+  age: 20
+  pet:
+    name: xiaoming
+    weight: 22.0
+  interest: [篮球,羽毛球]
+  animal:
+    - jerry
+    - morry
+  score:
+    english: [12,34,56] #数组
+    math:
+      first: 30
+      second: 20
+      third: 33
+    chinese: {first: 20, second: 20}
+  salarys: [2222,344.23,44324]
+  allPets:
+    sick:
+      - {name: tom22, weight: 20.0}
+      - {name: tom23, weight: 90.0}
+    health: [{name: tom24, weight: 22.0},{name: ttt}]
+
