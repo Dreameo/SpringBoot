@@ -5,4 +5,9 @@
 #    resources:
 #      static-locations: # 改变静态资源存放位置，可以放多个位置，所以是一个数组配置
 #        [classpath:/test/]
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
