@@ -1218,5 +1218,150 @@ mg-ui **访问 [http://localhost:8080/document.html](https://gitee.com/link?targ
 
 
 
+## Spring异步任务、邮件发送、定时任务
 
+> 异步任务
+
+异步处理还是非常常用的，比如我们在网站上发送邮件，后台会去发送邮件，此时前台会造成响应不动，直到邮件发送完毕，响应才会成功，所以我们一般会采用多线程的方式去处理这些任务。
+
+```java
+@Service
+public class AsyncServiceImpl implements AsyncService {
+    //告诉Spring这是一个异步方法
+    @Async // 方法上注明异步方法，且要在主程序加上@EnAsync注解
+    @Override
+    public void chat() {
+        System.out.println("chat ... 业务运行");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+    @GetMapping("/sayHello")
+    public String sayHello() throws InterruptedException {
+        asyncService.chat();
+        return "Hello World";
+    }
+
+```
+
+
+
+> 邮件发送
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+```
+
+> qq邮箱获取授权码：在QQ邮箱中的设置->账户->开启pop3和smtp服务
+
+```java
+  @Autowired
+    private JavaMailSenderImpl javaMailSender;
+    @Test
+    public void testMail() {
+        // 简单邮件
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject("测试邮件：这是主题哟");
+        mailMessage.setText("这是邮件的正文");
+
+        mailMessage.setTo("fanghua8899@gmail.com");
+        mailMessage.setFrom("yfh97@qq.com");
+        javaMailSender.send(mailMessage);
+    }
+
+
+  @Test
+    public void testMail1() throws MessagingException {
+        // 复杂邮件
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        //组装
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+        //正文
+        helper.setSubject("复杂邮件主题");
+        helper.setText("<p style='color:red'>带有样式的复杂邮件正文</p>", true);
+
+        //附件
+        helper.addAttachment("1.jpg", new File("E:\\aaaa.jpg"));
+        helper.addAttachment("2.jpg", new File("E:\\timg.jpg"));
+
+
+        helper.setTo("fanghua8899@gmail.com");
+        helper.setFrom("yfh97@qq.com");
+
+        javaMailSender.send(mimeMessage);
+    }
+
+
+```
+
+> 定时任务
+
+项目开发中经常需要执行一些定时任务，比如需要在每天凌晨的时候，分析一次前一天的日志信息，Spring为我们提供了异步执行任务调度的方式，提供了两个接口。
+
+- TaskExecutor接口（任务执行者）
+- TaskScheduler接口（任务调度者）
+
+两个注解：
+
+- @EnableScheduling——开启定时功能的注解
+- @Scheduled——什么时候执行
+
+```java
+@Service
+public class ScheduledService {
+
+    // 在一个特定的时间执行这个方法——Timer
+    //cron表达式
+    // 秒 分 时 日 月 周几
+
+    /*
+        0 49 11 * * ?   每天的11点49分00秒执行
+        0 0/5 11,12 * * ?   每天的11点和12点每个五分钟执行一次
+        0 15 10 ? * 1-6     每个月的周一到周六的10点15分执行一次
+        0/2 * * * * ?     每2秒执行一次
+     */
+    @Scheduled(cron = "0/2 * * * * ?")
+    public void hello() {
+        System.out.println("hello,你被执行了");
+    }
+}
+```
+
+常用cron表达式：
+
+```text
+（1）0/2 * * * * ?   表示每2秒 执行任务
+（1）0 0/2 * * * ?   表示每2分钟 执行任务
+（1）0 0 2 1 * ?   表示在每月的1日的凌晨2点调整任务
+（2）0 15 10 ? * MON-FRI   表示周一到周五每天上午10:15执行作业
+（3）0 15 10 ? 6L 2002-2006   表示2002-2006年的每个月的最后一个星期五上午10:15执行作
+（4）0 0 10,14,16 * * ?   每天上午10点，下午2点，4点
+（5）0 0/30 9-17 * * ?   朝九晚五工作时间内每半小时
+（6）0 0 12 ? * WED   表示每个星期三中午12点
+（7）0 0 12 * * ?   每天中午12点触发
+（8）0 15 10 ? * *   每天上午10:15触发
+（9）0 15 10 * * ?     每天上午10:15触发
+（10）0 15 10 * * ?   每天上午10:15触发
+（11）0 15 10 * * ? 2005   2005年的每天上午10:15触发
+（12）0 * 14 * * ?     在每天下午2点到下午2:59期间的每1分钟触发
+（13）0 0/5 14 * * ?   在每天下午2点到下午2:55期间的每5分钟触发
+（14）0 0/5 14,18 * * ?     在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发
+（15）0 0-5 14 * * ?   在每天下午2点到下午2:05期间的每1分钟触发
+（16）0 10,44 14 ? 3 WED   每年三月的星期三的下午2:10和2:44触发
+（17）0 15 10 ? * MON-FRI   周一至周五的上午10:15触发
+（18）0 15 10 15 * ?   每月15日上午10:15触发
+（19）0 15 10 L * ?   每月最后一日的上午10:15触发
+（20）0 15 10 ? * 6L   每月的最后一个星期五上午10:15触发
+（21）0 15 10 ? * 6L 2002-2005   2002年至2005年的每月的最后一个星期五上午10:15触发
+（22）0 15 10 ? * 6#3   每月的第三个星期五上午10:15触发
+```
 
