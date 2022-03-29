@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @SpringBootTest
-class Springboot05DruidApplicationTests {
+class Springboot07SwaggerApplicationTests {
     @Autowired
     DataSource dataSource;
 
@@ -38,7 +38,9 @@ class Springboot05DruidApplicationTests {
 
     @Test
     public void testUserMapper() {
-        User user = userService.getUserById(1);
+//        User user = userService.getUserById(1);
+//        User user = userService.getUserById1(1);
+        User user = userService.getById(1);
         System.out.println(user);
     }
 

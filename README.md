@@ -1081,6 +1081,27 @@ public interface UserMapper {
 
 
 
+> 添加了mybatis-plus依赖后,配置类mapper路径会报错
+>
+> invalid bound statement (not found)
+
+```java
+    @Test
+    public void testUserMapper() {
+//        User user = userService.getUserById(1);
+        User user = userService.getUserById1(1);
+        System.out.println(user);
+    }
+```
+
+
+
+> 要实现BaseMapper才不会，pojo类可以定义数据库表的名字
+
+
+
+
+
 **classpath和classpath*区别：**
 
 参考：https://www.cnblogs.com/vickylinj/p/9475990.html
@@ -1106,4 +1127,96 @@ classpath*：
 - 用classpath*:需要遍历所有的classpath，所以加载速度是很慢的；因此，在规划的时候，应该尽可能规划好资源文件所在的路径，尽量避免使用classpath*。
 
 #### 5.4 NoSQL
+
+
+
+
+
+## SpringBoot + Swagger
+
+> 参考：https://gitee.com/stevedream/spring-boot-learning/blob/master/SpringBoot%E8%AF%BE%E5%A0%82%E7%AC%94%E8%AE%B0/SpringBoot14%EF%BC%9ASwagger.md
+
+> 加入swagger报错：
+
+<font color='red'>解决办法：</font>
+
+https://blog.csdn.net/FFFPAG/article/details/121700133?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&utm_relevant_index=2
+
+
+
+https://blog.csdn.net/Best_T/article/details/121929867?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&utm_relevant_index=2
+
+<font color='red'>路径匹配AntPathMatcher vs PathPattern区别：</font><font>
+
+https://www.cnblogs.com/z-sm/p/14924659.html
+
+
+
+运行出错：
+
+<font color='red'>Invalid bound statement (not found): com.yfh.boot.mapper.UserMapper.getUserById</font> 
+
+> 配置静态资源过滤<build></build>：
+
+```xml
+<resources>
+    <resource>
+        <directory>src/main/java</directory>
+        <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+        </includes>
+        <filtering>false</filtering>
+    </resource>
+    <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+            <include>**/*.properties</include>
+            <include>**/*.xml</include>
+        </includes>
+        <filtering>false</filtering>
+    </resource>
+</resources>
+```
+
+
+
+> 可以换swagger页面的背景
+
+bootstrap-ui 访问 [http://localhost:8080/doc.html]
+
+```xml
+<!-- 引入swagger-bootstrap-ui包 /doc.html-->
+<dependency>
+   <groupId>com.github.xiaoymin</groupId>
+   <artifactId>swagger-bootstrap-ui</artifactId>
+   <version>1.9.1</version>
+</dependency>
+```
+
+Layui-ui  访问 [http://localhost:8080/docs.html]
+
+```xml
+<!-- 引入swagger-ui-layer包 /docs.html-->
+<dependency>
+   <groupId>com.github.caspar-chen</groupId>
+   <artifactId>swagger-ui-layer</artifactId>
+   <version>1.1.3</version>
+</dependency>
+```
+
+mg-ui **访问 [http://localhost:8080/document.html](https://gitee.com/link?target=http%3A%2F%2Flocalhost%3A8080%2Fdocument.html)**
+
+```xml
+<!-- 引入swagger-ui-layer包 /document.html-->
+<dependency>
+   <groupId>com.zyplayer</groupId>
+   <artifactId>swagger-mg-ui</artifactId>
+   <version>1.0.6</version>
+</dependency>
+```
+
+
+
+
 

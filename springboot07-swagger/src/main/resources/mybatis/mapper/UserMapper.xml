@@ -5,6 +5,10 @@
 <mapper namespace="com.yfh.boot.mapper.UserMapper">
     <!--     User getUserById(Integer id); -->
     <select id="getUserById" resultType="com.yfh.boot.pojo.User">
-        select * from  t_user where  id=#{id}
+        select * from  t_user where id=#{id}
+    </select>
+
+    <select id="getUserById1" resultType="com.yfh.boot.pojo.User">
+        select * from  t_user where id=#{id}
     </select>
 </mapper>

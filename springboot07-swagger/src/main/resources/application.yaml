@@ -1,6 +1,6 @@
 mybatis:
 #  config-location: classpath:mybatis/mybatis-config.xml
-  mapper-locations: classpath:mybatis/mapper/*.xml
+#  mapper-locations: classpath:mybatis/mapper/*.xml  #sql映射文件位置
   configuration:
     map-underscore-to-camel-case: true
   type-aliases-package: com.yfh.boot.pojo.*
@@ -39,3 +39,33 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # swagger2报错问题
+  profiles:
+    active: test
+
+## 多环境配置
+---
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: test
+
+---
+server:
+  port: 8081
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+---
+server:
+  port: 8083
+spring:
+  config:
+    activate:
+      on-profile: prod

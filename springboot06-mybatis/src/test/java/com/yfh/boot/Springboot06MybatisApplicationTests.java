@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @SpringBootTest
-class Springboot05DruidApplicationTests {
+class Springboot06MybatisApplicationTests {
     @Autowired
     DataSource dataSource;
 
